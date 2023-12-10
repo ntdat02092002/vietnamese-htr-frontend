@@ -1,7 +1,7 @@
 import { isValidDateValue } from "@testing-library/user-event/dist/utils";
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
-import { Stage, Layer, Image, Rect, Group, Text } from "react-konva";
+import { Stage, Layer, Image, Rect, Group, Text, Circle } from "react-konva";
 import useImage from 'use-image';
 import Konva from 'konva';
 
