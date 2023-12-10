@@ -7,6 +7,7 @@ import Konva from 'konva';
 
 const MAX_IMAGE_HEIGHT = 700;
 const MAX_IMAGE_WIDTH = 1200;
+var keys = 1
 
 const cropImage = async (imageRef, x, y, width, height) => {
     const dataURL = imageRef.current.toDataURL({
@@ -28,7 +29,7 @@ const cropImage = async (imageRef, x, y, width, height) => {
 
     // const result = await response.json();
     const label = 'test';
-    console.log(dataURL);
+    // console.log(dataURL);
     await sleep(2000).then(() => {
         console.log('End');
     });
@@ -85,13 +86,14 @@ const DrawAnnotations = () => {
     const [base64, setBase64Image] = useState(null)
 
     const imageRef = useRef();
+    const deleteRef = useRef();
 
     // const previewCanvasRef = useRef < HTMLCanvasElement > (null);
 
     const handleMouseDown = event => {
         if (newAnnotation.length === 0) {
             const { x, y } = event.target.getStage().getPointerPosition();
-            setNewAnnotation([{ x, y, width: 0, height: 0, key: "0", label:"" }]);
+            setNewAnnotation([{ x, y, width: 0, height: 0, key: "0", label: "" }]);
         }
     };
 
@@ -101,35 +103,41 @@ const DrawAnnotations = () => {
             const sy = newAnnotation[0].y;
             const { x, y } = event.target.getStage().getPointerPosition();
 
-            const annotationToAdd = {
-                x: sx,
-                y: sy,
-                width: x - sx,
-                height: y - sy,
-                key: annotations.length + 1,
-                label: '' // label rỗng
-            };
-            setNewAnnotation([]);
+            if (x - sx > 10 && y - sy > 5) {
+                const annotationToAdd = {
+                    x: sx,
+                    y: sy,
+                    width: x - sx,
+                    height: y - sy,
+                    key: keys,
+                    label: '' // label rỗng
+                };
+                keys += 1;
 
-            // annotations.push(annotationToAdd);
-            // setAnnotations([...annotations]); 
-            
+                setNewAnnotation([]);
 
-            setAnnotations(prevAnnotations => [...prevAnnotations, annotationToAdd]);
+                // annotations.push(annotationToAdd);
+                // setAnnotations([...annotations]); 
 
-            // Gọi hàm cropImage và cập nhật label của annotation sau khi hoàn thành
-            cropImage(imageRef, sx, sy ,x-sx, y -sy).then(label => {
-                setAnnotations(prevAnnotations =>
-                    prevAnnotations.map(annotation =>
-                        annotation.key === annotationToAdd.key
-                            ? { ...annotation, label: label } // Cập nhật label của annotation
-                            : annotation // Giữ nguyên annotation
-                    )
-                );
-            });
-            
 
-            
+                setAnnotations(prevAnnotations => [...prevAnnotations, annotationToAdd]);
+
+                // Gọi hàm cropImage và cập nhật label của annotation sau khi hoàn thành
+                cropImage(imageRef, sx, sy, x - sx, y - sy).then(label => {
+                    setAnnotations(prevAnnotations =>
+                        prevAnnotations.map(annotation =>
+                            annotation.key === annotationToAdd.key
+                                ? { ...annotation, label: label } // Cập nhật label của annotation
+                                : annotation // Giữ nguyên annotation
+                        )
+                    );
+                });
+
+            }
+            else {
+                setNewAnnotation([]);
+            }
+
         }
 
     };
@@ -172,25 +180,47 @@ const DrawAnnotations = () => {
                     {imageSrc && <LoadImage src={imageSrc} imageWidth={imageWidth} imageHeight={imageHeight} setImageWidth={setImageWidth} setImageHeight={setImageHeight} ratioWidth={ratioWidth} ratioHeight={ratioHeight} imageRef={imageRef} />}
                     {annotationsToDraw.map(value => {
                         return (
-                            <Rect
-                                x={value.x}
-                                y={value.y}
-                                width={value.width}
-                                height={value.height}
-                                fill="transparent"
-                                stroke="red"
-                            />
+                            <div>
+                                <Rect
+                                    x={value.x}
+                                    y={value.y}
+                                    width={value.width}
+                                    height={value.height}
+                                    fill="transparent"
+                                    stroke="red"
+                                />
+                                <Text
+                                    text={value.label}
+                                    fontSize={13}
+                                    fill='green'
+                                    x={value.x}
+                                    y={value.y - 10}
+                                />
+                            </div>
+
+
                         );
                     })}
                     {annotations.map(value => {
                         return (
-                            <Text
-                            text={value.label}
-                            fontSize={13}
-                            fill='green'
-                            x={value.x}
-                            y={value.y - 10}
-          />
+                            <div>
+                                <svg>
+                                    <Circle
+                                        x={value.width + value.x}
+                                        y={value.y}
+                                        key={value.key}
+                                        radius={5}
+                                        fill="blue"
+                                        onClick={() => {
+                                            setAnnotations(annotations.filter(annotation => annotation.key !== value.key));
+                                            // if (deleteRef.current) {
+                                            //     deleteRef.current.remove()
+                                            // } 
+                                        }}
+                                        ref={deleteRef}
+                                    />
+                                </svg>
+                            </div>
                         )
                     })}
 
