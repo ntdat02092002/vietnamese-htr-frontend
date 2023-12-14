@@ -5,8 +5,8 @@ import { Stage, Layer, Image, Rect, Group, Text, Circle } from "react-konva";
 import useImage from 'use-image';
 import Konva from 'konva';
 
-const MAX_IMAGE_HEIGHT = 700;
-const MAX_IMAGE_WIDTH = 1200;
+const MAX_IMAGE_HEIGHT = 600;
+const MAX_IMAGE_WIDTH = 1110;
 var keys = 1
 
 const cropImage = async (imageRef, x, y, width, height) => {
@@ -66,7 +66,7 @@ const LoadImage = ({ src, imageWidth, imageHeight, setImageWidth, setImageHeight
         }
     }, [image]);
 
-    return (<Image image={image} width={imageWidth} height={imageHeight} ref={imageRef} />)
+    return (<Image image={image} width={imageWidth} height={imageHeight} ref={imageRef}/>)
 };
 
 function sleep(ms) {
@@ -93,7 +93,7 @@ const DrawAnnotations = () => {
     const handleMouseDown = event => {
         if (newAnnotation.length === 0) {
             const { x, y } = event.target.getStage().getPointerPosition();
-            setNewAnnotation([{ x, y, width: 0, height: 0, key: "0", label: "" }]);
+            setNewAnnotation([{ x, y, width: 0, height: 0, key: "0", label: "", src: null }]);
         }
     };
 
@@ -110,7 +110,14 @@ const DrawAnnotations = () => {
                     width: x - sx,
                     height: y - sy,
                     key: keys,
-                    label: '' // label rỗng
+                    label: '', // label rỗng
+                    src: imageRef.current.toDataURL({
+                        pixelRatio: 3,
+                        x: sx, // Tọa độ x của vùng cắt
+                        y: sy, // Tọa độ y của vùng cắt
+                        width: x - sx, // Chiều rộng của vùng cắt
+                        height: y - sy,
+                    })
                 };
                 keys += 1;
 
@@ -156,7 +163,8 @@ const DrawAnnotations = () => {
                     width: x - sx,
                     height: y - sy,
                     key: "0",
-                    label: ""
+                    label: "",
+                    src: ""
                 }
             ]);
 
@@ -165,79 +173,84 @@ const DrawAnnotations = () => {
 
     const annotationsToDraw = [...annotations, ...newAnnotation];
     return (
-        <div>
-            {<ImageUploader setAnnotations={setAnnotations} setNewAnnotation={setNewAnnotation} setImageSrc={setImageSrc} setGetImage={setGetImage} />}
-            <Stage
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-                width={imageWidth}
-                height={imageHeight}
-            >
-                <Layer>
-                    {/* <div> */}
-                    {/* <Group x={0} y={0} width={MAX_IMAGE_WIDTH} height={MAX_IMAGE_HEIGHT} draggable={true}> */}
-                    {imageSrc && <LoadImage src={imageSrc} imageWidth={imageWidth} imageHeight={imageHeight} setImageWidth={setImageWidth} setImageHeight={setImageHeight} ratioWidth={ratioWidth} ratioHeight={ratioHeight} imageRef={imageRef} />}
-                    {annotationsToDraw.map(value => {
-                        return (
-                            <div>
-                                <Rect
-                                    x={value.x}
-                                    y={value.y}
-                                    width={value.width}
-                                    height={value.height}
-                                    fill="transparent"
-                                    stroke="red"
-                                />
-                                <Text
-                                    text={value.label}
-                                    fontSize={13}
-                                    fill='green'
-                                    x={value.x}
-                                    y={value.y - 10}
-                                />
-                            </div>
+        <div className="row">
+            <div className="col-9 p-1">
+                {<ImageUploader setAnnotations={setAnnotations} setNewAnnotation={setNewAnnotation} setImageSrc={setImageSrc} setGetImage={setGetImage} />}
+                <Stage
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                    width={imageWidth}
+                    height={imageHeight}
+                    style={{marginLeft: '14px', paddingRight: '8px'}}
+                >
+                    <Layer>
+                        {/* <div> */}
+                        {/* <Group x={12} y={0} width={MAX_IMAGE_WIDTH + 32} height={MAX_IMAGE_HEIGHT} draggable={false}> */}
+                            {imageSrc && <LoadImage src={imageSrc} imageWidth={imageWidth} imageHeight={imageHeight} setImageWidth={setImageWidth} setImageHeight={setImageHeight} ratioWidth={ratioWidth} ratioHeight={ratioHeight} imageRef={imageRef} />}
+                        {/* </Group> */}
+                        {annotationsToDraw.map(value => {
+                            return (
+                                <div>
+                                    <Rect
+                                        x={value.x}
+                                        y={value.y}
+                                        width={value.width}
+                                        height={value.height}
+                                        fill="transparent"
+                                        stroke="red"
+                                    />
+                                    <Text
+                                        text={value.label}
+                                        fontSize={13}
+                                        fill='green'
+                                        x={value.x}
+                                        y={value.y - 10}
+                                    />
+                                </div>
 
 
-                        );
-                    })}
+                            );
+                        })}
+                        {annotations.map(value => {
+                            return (
+                                <div>
+                                    <svg>
+                                        <Circle
+                                            x={value.width + value.x}
+                                            y={value.y}
+                                            key={value.key}
+                                            radius={5}
+                                            fill="blue"
+                                            onClick={() => {
+                                                setAnnotations(annotations.filter(annotation => annotation.key !== value.key));
+                                                // if (deleteRef.current) {
+                                                //     deleteRef.current.remove()
+                                                // } 
+                                            }}
+                                            ref={deleteRef}
+                                        />
+                                    </svg>
+                                </div>
+                            )
+                        })}
+
+                    </Layer>
+                </Stage>
+            </div>
+            <div className="col-3 shadow mb-1 bg-white rounded" style={{ display: 'block' }}>
+                <h4 className="col-12 text-secondary" style={{ marginRight: '24px' }}>Danh sách ảnh đã cắt</h4>
+                <ul>
                     {annotations.map(value => {
                         return (
-                            <div>
-                                <svg>
-                                    <Circle
-                                        x={value.width + value.x}
-                                        y={value.y}
-                                        key={value.key}
-                                        radius={5}
-                                        fill="blue"
-                                        onClick={() => {
-                                            setAnnotations(annotations.filter(annotation => annotation.key !== value.key));
-                                            // if (deleteRef.current) {
-                                            //     deleteRef.current.remove()
-                                            // } 
-                                        }}
-                                        ref={deleteRef}
-                                    />
-                                </svg>
-                            </div>
-                        )
+                            <li style={{ display: 'flex' }}>
+                                <img height={value.height} width={value.width} src={value.src}></img>
+                                <h5>{value.label}</h5>
+                            </li>
+                        );
                     })}
 
-                </Layer>
-            </Stage>
-
-            <div>
-                {/* {bboxInfo[0] ?
-                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                        <img
-                            src={getImage}
-                            width={bboxInfo[0].width / ratio_w}
-                            height={bboxInfo[0].height / ratio_h}
-                            crop={{ x: bboxInfo[0].x / ratio_w, y: bboxInfo[0].y / ratio_h, width: bboxInfo[0].width / ratio_w, height: bboxInfo[0].height / ratio_h }}
-                        />
-                    </div>
-                    : <div>ahihi</div>} */}
+                </ul>
             </div>
         </div>
 
@@ -279,9 +292,12 @@ export const ImageUploader = ({ setAnnotations, setNewAnnotation, setImageSrc, s
     // };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-            <h1 style={{ marginRight: '24px' }}> Upload Image</h1>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+        <div className="col-12 shadow mb-1 p-1 bg-white rounded">
+            <div className="row" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                <h4 className="col-5 text-secondary" style={{ marginRight: '24px' }}> Upload Image</h4>
+                <input type="file" className="col-5 btn btn-outline-success" accept="image/*" onChange={handleImageChange} />
+
+            </div>
 
         </div>
     );
