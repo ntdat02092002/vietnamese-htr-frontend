@@ -66,7 +66,7 @@ const LoadImage = ({ src, imageWidth, imageHeight, setImageWidth, setImageHeight
         }
     }, [image]);
 
-    return (<Image image={image} width={imageWidth} height={imageHeight} ref={imageRef}/>)
+    return (<Image image={image} width={imageWidth} height={imageHeight} ref={imageRef} />)
 };
 
 function sleep(ms) {
@@ -182,13 +182,13 @@ const DrawAnnotations = () => {
                     onMouseMove={handleMouseMove}
                     width={imageWidth}
                     height={imageHeight}
-                    style={{marginLeft: '14px', paddingRight: '8px'}}
+                    style={{ marginLeft: '14px', justifyContent: 'center', border: 'solid 1px #333' }}
                 >
-                    <Layer>
+                    <Layer >
                         {/* <div> */}
-                        {/* <Group x={12} y={0} width={MAX_IMAGE_WIDTH + 32} height={MAX_IMAGE_HEIGHT} draggable={false}> */}
+                        <Group x={0} y={0} width={MAX_IMAGE_WIDTH} height={MAX_IMAGE_HEIGHT} style={{ border: 'solid 1px #333' }} draggable={false}>
                             {imageSrc && <LoadImage src={imageSrc} imageWidth={imageWidth} imageHeight={imageHeight} setImageWidth={setImageWidth} setImageHeight={setImageHeight} ratioWidth={ratioWidth} ratioHeight={ratioHeight} imageRef={imageRef} />}
-                        {/* </Group> */}
+                        </Group>
                         {annotationsToDraw.map(value => {
                             return (
                                 <div>
@@ -238,20 +238,43 @@ const DrawAnnotations = () => {
                     </Layer>
                 </Stage>
             </div>
-            <div className="col-3 shadow mb-1 bg-white rounded" style={{ display: 'block' }}>
+            {/* <div className="col-3 shadow mb-1 bg-white rounded" style={{ display: 'block' }}>
                 <h4 className="col-12 text-secondary" style={{ marginRight: '24px' }}>Danh sách ảnh đã cắt</h4>
-                <ul>
-                    {annotations.map(value => {
+                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                    {annotations.map((value, index) => {
                         return (
-                            <li style={{ display: 'flex' }}>
-                                <img height={value.height} width={value.width} src={value.src}></img>
-                                <h5>{value.label}</h5>
-                            </li>
+                            <div>
+
+                                <li key={index} style={{ display: 'flex', alignItems: 'center', boxShadow: '0px 0px 5px 2px rgba(0,0,0,0.1)', marginBottom: '10px', padding: '10px' }}>
+                                    <img height={value.height} width={value.width} src={value.src} style={{ boxShadow: '0px 0px 5px 2px rgba(0,0,0,0.1)', marginRight: '10px' }}></img>
+                                    <h5>{value.label}</h5>
+                                </li>
+                                
+                            </div>
                         );
                     })}
+                </ul>
+            </div> */}
 
+            <div className="col-3 shadow mb-1 bg-white rounded" style={{ display: 'block', maxHeight: '100vh', overflow: 'auto' }}>
+                <h4 className="col-12 text-secondary" style={{ marginRight: '24px', marginTop: '12px', marginBottom: '12px' }}>Danh sách ảnh đã cắt</h4>
+                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                    {annotations.map((value, index) => {
+                        return (
+                            <div>
+                                <li key={index} style={{ display: 'flex', alignItems: 'center', boxShadow: '0px 0px 5px 2px rgba(0,0,0,0.1)', marginBottom: '10px', padding: '10px' }}>
+                                    <img height={value.height} width={value.width} src={value.src} style={{ boxShadow: '0px 0px 5px 2px rgba(0,0,0,0.1)', marginRight: '10px' }}></img>
+                                    <h5>{value.label}</h5>
+                                </li>
+                                {index !== annotations.length - 1 && <hr style={{ width: '100%', marginTop: '10px' }} />}
+                            </div>
+
+                        );
+                    })}
                 </ul>
             </div>
+
+
         </div>
 
     );
@@ -294,9 +317,15 @@ export const ImageUploader = ({ setAnnotations, setNewAnnotation, setImageSrc, s
     return (
         <div className="col-12 shadow mb-1 p-1 bg-white rounded">
             <div className="row" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                <h4 className="col-5 text-secondary" style={{ marginRight: '24px' }}> Upload Image</h4>
-                <input type="file" className="col-5 btn btn-outline-success" accept="image/*" onChange={handleImageChange} />
-
+                <h4 className="col-2 text-secondary" style={{ marginRight: '24px' }}> Upload Image</h4>
+                <div className="col-2" style={{ position: 'relative', display: 'inline-block' }}>
+                    <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} id="fileInput" />
+                    <label htmlFor="fileInput" style={{ padding: '8px 16px', backgroundColor: '#808080', color: 'white', cursor: 'pointer', borderRadius: '5px' }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'pink'}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#808080'}>
+                        Choose File
+                    </label>
+                </div>
             </div>
 
         </div>
