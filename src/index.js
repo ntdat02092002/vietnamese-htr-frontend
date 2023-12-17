@@ -18,21 +18,21 @@ const cropImage = async (imageRef, x, y, width, height) => {
         height: height, // Chiều cao của vùng cắt
     });
 
-    // // Gửi dữ liệu ảnh đã cắt đến API
-    // const response = await fetch('your-api-url', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ image: dataURL }),
-    // });
-
-    // const result = await response.json();
-    const label = 'test';
-    // console.log(dataURL);
-    await sleep(2000).then(() => {
-        console.log('End');
+    // Gửi dữ liệu ảnh đã cắt đến API
+    const response = await fetch('http://192.168.20.156:8080/predict', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: dataURL }),
     });
+
+    const result = await response.json();
+    const label = result.text;;
+    // console.log(dataURL);
+    // await sleep(2000).then(() => {
+    //     console.log('End');
+    // });
 
     return label;
 };
