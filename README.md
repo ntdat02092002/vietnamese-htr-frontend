@@ -14,4 +14,6 @@ Open cmd and follow these steps:
 - open browser and open link `localhost:3000`
   
 ## Get API
-This application will not be able to run without the return api so I suggest you run [API]() first then run this repo.
+This application will not be able to run without the return api so I suggest you run [API](https://github.com/TruongNoDame/vietnamese_htr_frontend/tree/vietnamese_htr_api) first then run this repo.
+
+You have to change 
