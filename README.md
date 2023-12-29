@@ -14,7 +14,7 @@ Open cmd and follow these steps:
 - run: `git clone` this repo.
 - run: `cd vietnamese-htr-frontend`
 - run: `npm install`
-- open `.env` and edit the environment variables for the recognition API.
+- open `.env` file and edit the environment variables for the recognition API.
 - run: `npm start`
 - open browser and open link `localhost:3000`
   
