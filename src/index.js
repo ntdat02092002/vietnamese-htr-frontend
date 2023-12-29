@@ -1,9 +1,7 @@
-import { isValidDateValue } from "@testing-library/user-event/dist/utils";
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import { Stage, Layer, Image, Rect, Group, Text, Circle } from "react-konva";
 import useImage from 'use-image';
-import Konva from 'konva';
 
 const MAX_IMAGE_HEIGHT = 600;
 const MAX_IMAGE_WIDTH = 1110;
@@ -19,7 +17,10 @@ const cropImage = async (imageRef, x, y, width, height) => {
     });
 
     // Gửi dữ liệu ảnh đã cắt đến API
-    const response = await fetch('http://192.168.20.156:8080/predict', {
+    const apiHost = process.env.REACT_APP_API_HOST;
+    const apiPort = process.env.REACT_APP_API_PORT;
+    const apiUrl = `${apiHost}:${apiPort}/predict`;
+    const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
