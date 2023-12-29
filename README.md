@@ -5,15 +5,16 @@ Our handwriting recognition project uses the current state-of-the-art scene text
 
 - Describe the problem of handwriting recognition: with the input being an image containing handwriting that needs to be recognized, the output is the text in the image in the form of digital data.
 ![htr_in_out](https://github.com/TruongNoDame/vietnamese_htr_frontend/blob/main/images/htr_in_out.png)
+
+## Get API
+This application will not be able to run without the recognition response from api so you need to run [API](https://github.com/ntdat02092002/vietnamese-htr-api) first then run this repo.
+
 ## Run Demo
 Open cmd and follow these steps: 
 - run: `git clone` this repo.
-- run: `cd vietnamese_htr_frontend`
+- run: `cd vietnamese-htr-frontend`
 - run: `npm install`
+- open `.env` and edit the environment variables for the recognition API.
 - run: `npm start`
 - open browser and open link `localhost:3000`
   
-## Get API
-This application will not be able to run without the return api so I suggest you run [API](https://github.com/ntdat02092002/vietnamese-htr-api) first then run this repo.
-
-You have to change url of `const response` in src/index.js file. So that it matches your api
