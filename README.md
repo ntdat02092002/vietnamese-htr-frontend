@@ -17,3 +17,6 @@ Open cmd and follow these steps:
 - open `.env` file and edit the environment variables for the recognition API.
 - run: `npm start`
 - open browser and open link `localhost:3000`
+
+## Video demo
+![video_demo](https://www.youtube.com/watch?v=cB48SvzkSvo)
