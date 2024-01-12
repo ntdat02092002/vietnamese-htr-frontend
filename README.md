@@ -19,4 +19,4 @@ Open cmd and follow these steps:
 - open browser and open link `localhost:3000`
 
 ## Video demo
-[![Handwriting text recognition](http://img.youtube.com/vi/XAMVzS13HY0/0.jpg)](https://www.youtube.com/watch?v=cB48SvzkSvo "Handwriting text recognition")
+[![Handwriting text recognition]](https://www.youtube.com/watch?v=cB48SvzkSvo "Handwriting text recognition")
