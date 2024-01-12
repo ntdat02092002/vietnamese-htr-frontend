@@ -19,4 +19,4 @@ Open cmd and follow these steps:
 - open browser and open link `localhost:3000`
 
 ## Video demo
-[![Handwriting text recognition](https://www.youtube.com/watch?v=cB48SvzkSvo "Handwriting text recognition")]
+[![Handwriting text recognition](https://github.com/TruongNoDame/vietnamese_htr_frontend/blob/main/images/htr_in_out.png)](https://www.youtube.com/watch?v=cB48SvzkSvo "Handwriting text recognition")
