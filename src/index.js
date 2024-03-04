@@ -316,8 +316,8 @@ export const ImageUploader = ({ setAnnotations, setNewAnnotation, setImageSrc, s
     return (
         <div className="col-12 shadow mb-1 p-1 bg-white rounded">
             <div className="row" style={{ display: 'flex', marginRight: '0px', marginLeft: '0px', justifyContent: 'space-around', alignItems: 'center' }}>
-                <h4 className="col-2 text-secondary" style={{ marginRight: '24px' }}> Upload Image</h4>
-                <div className="col-2" style={{ position: 'relative', display: 'inline-block' }}>
+                <h4 className="col-4 text-secondary" style={{ marginRight: '24px' }}> Upload Image</h4>
+                <div className="col-4" style={{ position: 'relative', display: 'inline-block' }}>
                     <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} id="fileInput" />
                     <label htmlFor="fileInput" style={{ padding: '8px 16px', backgroundColor: '#808080', color: 'white', cursor: 'pointer', borderRadius: '5px' }}
                         onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'pink'}
