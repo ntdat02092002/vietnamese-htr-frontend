@@ -3,8 +3,6 @@ import ReactDOM from "react-dom";
 import { Stage, Layer, Image, Rect, Group, Text, Circle } from "react-konva";
 import useImage from 'use-image';
 
-const MAX_IMAGE_HEIGHT = 600;
-const MAX_IMAGE_WIDTH = 1110;
 var keys = 1
 
 const cropImage = async (imageRef, x, y, width, height) => {
@@ -38,24 +36,23 @@ const cropImage = async (imageRef, x, y, width, height) => {
     return label;
 };
 
-const LoadImage = ({ src, imageWidth, imageHeight, setImageWidth, setImageHeight, ratioWidth, ratioHeight, imageRef }) => {
+const LoadImage = ({ src, imageWidth, imageHeight, setImageWidth, setImageHeight, ratioWidth, ratioHeight, imageRef, containerImageRef }) => {
     const [image] = useImage(src);
     useEffect(() => {
         if (image?.complete) {
-            const width = image.naturalWidth;
+            const width = image.naturalWidth; 
             const height = image.naturalHeight;
 
-            if (width > height && width > MAX_IMAGE_WIDTH) {
-                setImageWidth(MAX_IMAGE_WIDTH);
-                setImageHeight(height * (MAX_IMAGE_WIDTH / width))
-                ratioHeight(MAX_IMAGE_WIDTH / width)
-                ratioWidth((MAX_IMAGE_WIDTH / width))
-            }
-            else if (height > width && height > MAX_IMAGE_HEIGHT) {
-                setImageHeight(MAX_IMAGE_HEIGHT);
-                setImageWidth(width * (MAX_IMAGE_HEIGHT / height))
-                ratioWidth(MAX_IMAGE_HEIGHT / height)
-                ratioHeight((MAX_IMAGE_HEIGHT / height))
+            const containerImage = containerImageRef.current;
+            const computedStyle = window.getComputedStyle(containerImage);
+            const paddingWidth = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
+            const maxWidth = containerImage.offsetWidth - paddingWidth - 10; // minus 10 to avoid scroll bar width if image height to large
+
+            if (width > maxWidth) {
+                setImageWidth(maxWidth);
+                setImageHeight(height * (maxWidth / width))
+                // ratioHeight(maxWidth / width)
+                // ratioWidth((maxWidth / width))
             }
             else {
                 setImageWidth(width)
@@ -88,6 +85,7 @@ const DrawAnnotations = () => {
 
     const imageRef = useRef();
     const deleteRef = useRef();
+    const containerImageRef = useRef(null);
 
     // const previewCanvasRef = useRef < HTMLCanvasElement > (null);
 
@@ -174,8 +172,8 @@ const DrawAnnotations = () => {
 
     const annotationsToDraw = [...annotations, ...newAnnotation];
     return (
-        <div className="row">
-            <div className="col-9 p-1">
+        <div className="row" style={{ marginRight: '0px', marginLeft: '0px'}}>
+            <div className="col-9 p-1" ref={containerImageRef}>
                 {<ImageUploader setAnnotations={setAnnotations} setNewAnnotation={setNewAnnotation} setImageSrc={setImageSrc} setGetImage={setGetImage} />}
                 <Stage
                     onMouseDown={handleMouseDown}
@@ -183,12 +181,12 @@ const DrawAnnotations = () => {
                     onMouseMove={handleMouseMove}
                     width={imageWidth}
                     height={imageHeight}
-                    style={{ marginLeft: '14px', justifyContent: 'center', border: 'solid 1px #333' }}
+                    style={{ marginLeft: '0px', justifyContent: 'center', border: 'solid 1px #333' }}
                 >
                     <Layer >
                         {/* <div> */}
-                        <Group x={0} y={0} width={MAX_IMAGE_WIDTH} height={MAX_IMAGE_HEIGHT} style={{ border: 'solid 1px #333' }} draggable={false}>
-                            {imageSrc && <LoadImage src={imageSrc} imageWidth={imageWidth} imageHeight={imageHeight} setImageWidth={setImageWidth} setImageHeight={setImageHeight} ratioWidth={ratioWidth} ratioHeight={ratioHeight} imageRef={imageRef} />}
+                        <Group x={0} y={0} style={{ border: 'solid 1px #333' }} draggable={false}>
+                            {imageSrc && <LoadImage src={imageSrc} imageWidth={imageWidth} imageHeight={imageHeight} setImageWidth={setImageWidth} setImageHeight={setImageHeight} ratioWidth={ratioWidth} ratioHeight={ratioHeight} imageRef={imageRef} containerImageRef={containerImageRef}/>}
                         </Group>
                         {annotationsToDraw.map(value => {
                             return (
@@ -317,7 +315,7 @@ export const ImageUploader = ({ setAnnotations, setNewAnnotation, setImageSrc, s
 
     return (
         <div className="col-12 shadow mb-1 p-1 bg-white rounded">
-            <div className="row" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+            <div className="row" style={{ display: 'flex', marginRight: '0px', marginLeft: '0px', justifyContent: 'space-around', alignItems: 'center' }}>
                 <h4 className="col-2 text-secondary" style={{ marginRight: '24px' }}> Upload Image</h4>
                 <div className="col-2" style={{ position: 'relative', display: 'inline-block' }}>
                     <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} id="fileInput" />
