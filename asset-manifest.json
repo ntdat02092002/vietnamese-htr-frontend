@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/vietnamese-htr-frontend/static/js/main.3259d359.js",
+    "main.js": "/vietnamese-htr-frontend/static/js/main.6cb3db7f.js",
     "index.html": "/vietnamese-htr-frontend/index.html",
-    "main.3259d359.js.map": "/vietnamese-htr-frontend/static/js/main.3259d359.js.map"
+    "main.6cb3db7f.js.map": "/vietnamese-htr-frontend/static/js/main.6cb3db7f.js.map"
   },
   "entrypoints": [
-    "static/js/main.3259d359.js"
+    "static/js/main.6cb3db7f.js"
   ]
 }
