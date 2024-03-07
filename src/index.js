@@ -6,34 +6,39 @@ import useImage from 'use-image';
 var keys = 1
 
 const cropImage = async (imageRef, x, y, width, height) => {
-    const dataURL = imageRef.current.toDataURL({
-        pixelRatio: 3,
-        x: x, // Tọa độ x của vùng cắt
-        y: y, // Tọa độ y của vùng cắt
-        width: width, // Chiều rộng của vùng cắt
-        height: height, // Chiều cao của vùng cắt
-    });
+    try {
+        const dataURL = imageRef.current.toDataURL({
+            pixelRatio: 3,
+            x: x, // Tọa độ x của vùng cắt
+            y: y, // Tọa độ y của vùng cắt
+            width: width, // Chiều rộng của vùng cắt
+            height: height, // Chiều cao của vùng cắt
+        });
 
-    // Gửi dữ liệu ảnh đã cắt đến API
-    const apiHost = process.env.REACT_APP_API_HOST;
-    const apiPort = process.env.REACT_APP_API_PORT;
-    const apiUrl = `${apiHost}:${apiPort}/predict`;
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: dataURL }),
-    });
+        // Gửi dữ liệu ảnh đã cắt đến API
+        const apiHost = process.env.REACT_APP_API_HOST;
+        const apiPort = process.env.REACT_APP_API_PORT;
+        const apiUrl = `${apiHost}:${apiPort}/predict`;
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ image: dataURL }),
+        });
 
-    const result = await response.json();
-    const label = result.text;;
-    // console.log(dataURL);
-    // await sleep(2000).then(() => {
-    //     console.log('End');
-    // });
+        if (!response.ok) {
+            throw new Error('Call API failed');
+        }
 
-    return label;
+        const result = await response.json();
+        const label = result.text;
+        return label;
+    } catch (error) {
+        console.error('Error calling API:', error);
+        window.alert('Call recognition API failed, please ensure that the API is already set up.');
+        return 'TEMPORARY';
+    }
 };
 
 const LoadImage = ({ src, imageWidth, imageHeight, setImageWidth, setImageHeight, ratioWidth, ratioHeight, imageRef, containerImageRef }) => {
