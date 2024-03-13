@@ -18,5 +18,9 @@ Open cmd and follow these steps:
 - run: `npm start`
 - open browser and open link `localhost:3000`
 
+## Live demo
+[Try now](https://ntdat02092002.github.io/vietnamese-htr-frontend/)
+
+
 ## Video demo
 [![Handwriting text recognition](https://github.com/TruongNoDame/vietnamese-htr-frontend/blob/main/images/video_demo.png)](https://www.youtube.com/watch?v=cB48SvzkSvo "Handwriting text recognition")
